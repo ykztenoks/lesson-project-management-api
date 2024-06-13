@@ -35,13 +35,11 @@ router.delete("/:taskId", async (req, res) => {
   try {
     const { taskId } = req.params;
 
-    const taskToDelete = await Task.findById(taskId);
+    const taskToDelete = await Task.findByIdAndDelete(taskId);
 
     await Project.findByIdAndUpdate(taskToDelete.project, {
       $pull: { tasks: taskId },
     });
-
-    await Task.deleteOne(taskToDelete);
 
     res.json({ message: "Task deleted and removed from project succesfully" });
   } catch (error) {
